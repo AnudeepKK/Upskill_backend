@@ -1,7 +1,8 @@
 const express = require('express')
-const router = express.Router
+const router = express.Router()
 
 const Skill = require('../model/skillsModel')
+const techModel =require('../model/techModel')
 
 router.get('/fetchSkills',async(req, res)=>{
   try{
