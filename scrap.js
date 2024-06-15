@@ -1,30 +1,5 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const mongoose = require('mongoose')
-const cors=require('cors')
-
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs');
-const { Console } = require('console');
-
-dotenv.config();
-
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-
-const port = process.env.PORT;
-
-mongoose
-.connect(process.env.MONGODB_URI)
-.then(() => {
-console.log("db connected");
-})
-.catch((err) => {
-console.log(err);
-});
 
 const url = 'https://www.linkedin.com/pulse/top-10-high-income-skills-learn-2024-make-six-figure-salary-moroz-pwspf';
 
@@ -77,9 +52,3 @@ axios.get(url)
   .catch(error => {
     console.error('Error fetching the page: ', error);
   });
-
-
-
-app.listen(port, () => {
-console.log(`server running at ${port}`);
-});
