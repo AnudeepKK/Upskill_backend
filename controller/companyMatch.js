@@ -1,17 +1,18 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const Skill = require('../model/skillsModel')
-const Tech =require('../model/techModel')
+const Skill = require('../model/skillsModel');
+const Tech = require('../model/techModel');
 
-router.get('/fetchSkills',async(req, res)=>{
-  try{
+router.post('/fetchSkills', async (req, res) => {
+  try {
+    const input = req.params
 
     const allSkills = await Skill.find();
 
     // Sort the skills to find the top 3 and bottom 3
     const topSkills = allSkills.slice().sort((a, b) => b.score - a.score).slice(0, 3);
-    const bottomSkills = allSkills.slice().sort((a, b) => a.score - b.score).slice(0, 3);
+    const bottomSkills = allSkills.slice().sort((a, b) => a.score - b.score).slice(0, 2);
 
     const techSkills = await Tech.find();
     console.log('Tech Skills:', techSkills);
@@ -35,19 +36,31 @@ router.get('/fetchSkills',async(req, res)=>{
         desc: skill.desc  // Assuming techSkills already has 'desc' attribute
       }))
     ];
-    
-   // Send response
-   res.status(200).json({
-    status: 200,
-    message: 'Top and bottom skills fetched and filtered successfully',
-    data: {
-      newSkills,
-    },
-    success: true,
-  });
 
+    // Create sets for easy lookup
+    const inputSkillsSet = new Set(input.map(skill => skill.skill));
+    const newSkillNamesSet = new Set(newSkills.map(skill => skill.name));
+    const bottomSkillNamesSet = new Set(filteredBottomSkills.map(skill => skill.name));
 
-  }catch(error){
+    // Compare newSkills with input to create toAdd
+    const toAdd = newSkills.filter(skill => !inputSkillsSet.has(skill.name));
+
+    // Compare input with bottomSkills to create toRemove
+    const toRemove = input.filter(skill => bottomSkillNamesSet.has(skill.skill));
+
+    // Send response
+    res.status(200).json({
+      status: 200,
+      message: 'Top and bottom skills fetched and filtered successfully',
+      data: {
+        newSkills,
+        toAdd,
+        toRemove
+      },
+      success: true,
+    });
+
+  } catch (error) {
     res.status(500).json({
       status: 500,
       message: 'Internal server error',
@@ -55,9 +68,7 @@ router.get('/fetchSkills',async(req, res)=>{
       success: false,
     });
   }
-
-
-})
+});
 
 router.put('/skills/update', async (req, res) => {
   const updates = req.body;
@@ -88,4 +99,4 @@ router.put('/skills/update', async (req, res) => {
   }
 });
 
-module.exports = router
+module.exports = router;
