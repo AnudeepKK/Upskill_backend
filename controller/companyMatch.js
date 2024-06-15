@@ -6,7 +6,7 @@ const Tech = require('../model/techModel');
 
 router.post('/fetchSkills', async (req, res) => {
   try {
-    const input = req.params
+    const input = req.body
 
     const allSkills = await Skill.find();
 
