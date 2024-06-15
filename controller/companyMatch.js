@@ -59,4 +59,39 @@ router.get('/fetchSkills',async(req, res)=>{
 
 })
 
+router.put('/skills/update', async (req, res) => {
+  const updates = req.body;
+
+  try {
+    // Iterate through each update
+    for (const update of updates) {
+      const { name, score } = update;
+
+      // Find the skill by name
+      const skill = await Skill.findOne({ name });
+
+      if (!skill) {
+        // If skill not found, create a new entry (optional)
+        // You can choose to create a new skill entry if not found
+        // Example:
+        // const newSkill = new Skill({ name, score });
+        // await newSkill.save();
+        // continue;
+        return res.status(404).json({ error: `Skill '${name}' not found` });
+      }
+
+      // Update the score
+      skill.score += parseInt(score); // Assuming score is a number
+
+      // Save the updated skill
+      await skill.save();
+    }
+
+    return res.json({ message: 'Skills updated successfully' });
+  } catch (error) {
+    console.error('Error updating skills:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router
