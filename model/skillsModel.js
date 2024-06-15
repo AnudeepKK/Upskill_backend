@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 // Define schema for the skills collection
 const skillSchema = new mongoose.Schema({
   name: String,
-  score: Number
+  score: Number,
+  desc: String
 });
 
 // Create a model based on the schema

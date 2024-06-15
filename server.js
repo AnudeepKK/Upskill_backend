@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cors());
 
 const port = process.env.PORT;
-app.use('/',matching)
+app.use('/',matching);
 
 mongoose
 .connect(process.env.MONGODB_URI)
@@ -66,9 +66,11 @@ axios.get(url)
           const listItemText = listItem.text().trim();
 
           if (listItemText.includes('Skills to Learn:')) {
+            const desc = listItemText;
             const skillsToLearnText = listItemText.slice(listItemText.indexOf('Skills to Learn:') + 'Skills to Learn:'.length).trim();
             const skillsToLearn = skillsToLearnText.split(',').map(skill => skill.trim());
             skillObject.skilltolearn = skillsToLearn;
+            skillObject.desc = desc;
             skills.push(skillObject);
             listItemIndex++;
             break;
@@ -82,13 +84,13 @@ axios.get(url)
     // Output the skills array in JSON format
     console.log(JSON.stringify(skills));
 
-    techModel.insertMany(skills)
-      .then(() => {
-        console.log('Skills inserted into MongoDB successfully');
-      })
-      .catch(error => {
-        console.error('Error inserting skills into MongoDB:', error);
-      });
+    // techModel.insertMany(skills)
+    //   .then(() => {
+    //     console.log('Skills inserted into MongoDB successfully');
+    //   })
+    //   .catch(error => {
+    //     console.error('Error inserting skills into MongoDB:', error);
+    //   });
 
 
   })

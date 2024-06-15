@@ -7,44 +7,44 @@ const Tech =require('../model/techModel')
 router.get('/fetchSkills',async(req, res)=>{
   try{
 
-    const aggregationPipeline = [
-      { $sort: { score: -1 } }, // Sort by score in descending order
-      { $facet: {
-          topSkills: [ { $limit: 3 } ],
-          bottomSkills: [ { $limit: 3 }, { $sort: { score: 1 } } ]
-        }
-      }
+    const allSkills = await Skill.find();
+
+    // Sort the skills to find the top 3 and bottom 3
+    const topSkills = allSkills.slice().sort((a, b) => b.score - a.score).slice(0, 3);
+    const bottomSkills = allSkills.slice().sort((a, b) => a.score - b.score).slice(0, 3);
+
+    const techSkills = await Tech.find();
+    console.log('Tech Skills:', techSkills);
+
+    const techSkillsSet = new Set(techSkills.map(t => t.skill));
+    console.log('Tech Skills Set:', techSkillsSet);
+
+    const filteredTopSkills = topSkills.filter((skill) => !techSkillsSet.has(skill.name));
+
+    // Remove matching skills from bottomSkills
+    const filteredBottomSkills = bottomSkills.filter((skill) => !techSkillsSet.has(skill.name));
+
+    // Create a new object with the remaining skills from topSkills and bottomSkills
+    const newSkills = [
+      ...filteredTopSkills.map(skill => ({
+        name: skill.name,
+        desc: skill.desc  // Assuming filteredTopSkills already has 'desc' attribute
+      })),
+      ...techSkills.map(skill => ({
+        name: skill.skill,
+        desc: skill.desc  // Assuming techSkills already has 'desc' attribute
+      }))
     ];
-
-    // Execute the aggregation pipeline using the Skill model
-    const result = await Skill.aggregate(aggregationPipeline);
-
-    // Extract top and bottom skills from the result
-    const { topSkills, bottomSkills } = result[0];
-
-   // Fetch all skills from the Tech model
-   const techSkills = await Tech.find();
-  //  console.log(techSkills)
-   const techSkillsSet = new Set(techSkills.map(t => t.skill));
-
-   console.log(techSkillsSet)
-
-   // Remove matching skills from topSkills
-   topSkills = topSkills.filter(skill => !techSkillsSet.has(skill.name));
-
-   // Remove matching skills from bottomSkills
-   bottomSkills = bottomSkills.filter(skill => !techSkillsSet.has(skill.name));
-
-   // Create a new object with the remaining skills from topSkills and original skills from topSkills
-   const newSkills = [...topSkills, ...bottomSkills];
-
+    
    // Send response
    res.status(200).json({
-     status: 200,
-     message: 'Top and bottom skills fetched and filtered successfully',
-     data: { newSkills, topSkills, bottomSkills },
-     success: true,
-   });
+    status: 200,
+    message: 'Top and bottom skills fetched and filtered successfully',
+    data: {
+      newSkills,
+    },
+    success: true,
+  });
 
 
   }catch(error){
@@ -71,12 +71,6 @@ router.put('/skills/update', async (req, res) => {
       const skill = await Skill.findOne({ name });
 
       if (!skill) {
-        // If skill not found, create a new entry (optional)
-        // You can choose to create a new skill entry if not found
-        // Example:
-        // const newSkill = new Skill({ name, score });
-        // await newSkill.save();
-        // continue;
         return res.status(404).json({ error: `Skill '${name}' not found` });
       }
 

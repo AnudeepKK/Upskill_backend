@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { type } = require('os');
 const Schema = mongoose.Schema;
 
 // Define the schema for the tech collection
@@ -10,6 +11,9 @@ const techSchema = new Schema({
   skilltolearn: {
     type: [String], // Assuming skilltolearn is an array of strings
     required: true
+  },
+  desc :{
+    type:String
   }
 });
 
