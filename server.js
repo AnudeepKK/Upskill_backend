@@ -8,6 +8,8 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 
 const matching = require('./controller/companyMatch')
+const agricultureController = require('./controller/agricultureController.js');
+const resumeController = require('./controller/resumeController.js');
 
 const techModel=require('./model/techModel')
 dotenv.config();
@@ -19,6 +21,8 @@ app.use(cors());
 
 const port = process.env.PORT;
 app.use('/',matching);
+app.use('/api/resume', resumeController);
+app.use('/api/agriculture',agricultureController)
 
 mongoose
 .connect(process.env.MONGODB_URI)
