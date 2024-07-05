@@ -1,5 +1,5 @@
 const express = require('express');
-const Resume = require('./../models/resumeModel.js');
+const Resume = require('../model/resumeModel.js');
 
 const router = express.Router();
 
