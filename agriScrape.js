@@ -1,5 +1,6 @@
 const cheerio = require("cheerio");
 const Agriculture = require('./model/agricultureModel');
+const request = require("request")
 
 function scrape() {
     return new Promise(async (resolve, reject) => {
@@ -21,6 +22,8 @@ function scrape() {
 
                 desc.shift();
                 desc.pop();
+
+                storeInDB({arr, desc})
                 
                 resolve({arr, desc});
             } else {
@@ -30,6 +33,28 @@ function scrape() {
     });
 }
 
-// async function storeInDB
+async function storeInDB(scrap){
+        const scraped = scrap;
+        const headings = scraped.arr;
+        const desc = scraped.desc;
+    
+        let documents = []
+        for(let i=0; i<headings.length; i++){
+            documents.push({
+                skills: headings[i],
+                desc: desc[i]
+            })
+        }
+
+        console.log(documents.length)
+    
+        console.log(documents);
+    
+        const result = await Agriculture.insertMany(documents);
+    
+        console.log(result);
+        
+        
+}
 
 module.exports = scrape;

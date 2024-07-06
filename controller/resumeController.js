@@ -2,6 +2,7 @@ const express = require('express');
 const Resume = require('../model/resumeModel.js');
 
 const router = express.Router();
+const upload = require('./../multerConfig.js')
 
 router.post('/',upload.single('url'), async (req, res) => {
     try{

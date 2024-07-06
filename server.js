@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 const cors=require('cors')
 const cloudinary = require("cloudinary").v2;
+const scrape = require('./agriScrape.js')
 // const dotenv = require('dotenv');
 
 // dotenv.config();
