@@ -1,4 +1,4 @@
-const Agriculture = require('./../models/agricultureModel.js')
+const Agriculture = require('./../model/agricultureModel.js')
 const express = require("express");
 const router = express.Router();
 
