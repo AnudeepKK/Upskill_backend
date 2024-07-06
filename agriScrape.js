@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const Agriculture = require('./model/agricultureModel');
 const request = require("request")
 
-function scrape() {
+async function scrape() {
         await Agriculture.deleteMany();
         request('https://agri.faisalzariservice.com/2023/05/skills-for-agriculture-students.html', (error, response, html) => {
             if (!error && response.statusCode === 200) {
