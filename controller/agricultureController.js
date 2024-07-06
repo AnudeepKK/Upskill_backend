@@ -38,7 +38,7 @@ router.post('/scrape', async (req, res) => {
 
     const result = await Agriculture.insertMany(documents);
 
-    console.log(result);
+    // console.log(result);
     res.status(201).json({
         status:'success',
         data: result

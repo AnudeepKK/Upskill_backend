@@ -24,7 +24,6 @@ async function scrape() {
 
                 storeInDB({arr, desc})
                 
-                resolve({arr, desc});
         }});
     };
 
@@ -43,11 +42,11 @@ async function storeInDB(scrap){
 
         console.log(documents.length)
     
-        console.log(documents);
+        // console.log(documents);
     
         const result = await Agriculture.insertMany(documents);
     
-        console.log(result);
+        // console.log(result);
         
         
 }
