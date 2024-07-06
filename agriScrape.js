@@ -24,7 +24,6 @@ async function scrape() {
 
                 storeInDB({arr, desc})
                 
-                resolve({arr, desc});
         }});
     };
 

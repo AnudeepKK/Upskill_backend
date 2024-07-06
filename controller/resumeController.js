@@ -8,7 +8,7 @@ router.post('/',upload.single('url'), async (req, res) => {
     try{
         // const url = req.body.url;
         const name = req.body.name;
-        const profession = req.body.profession;
+        const tag = req.body.tag;
 
         //get the image object
         const imageFile = req.file;
@@ -32,7 +32,7 @@ router.post('/',upload.single('url'), async (req, res) => {
         const resumeData = await Resume.create({
             url: imageUrl,
             name: name,
-            pofession: profession
+            tag: tag
         })
 
         
