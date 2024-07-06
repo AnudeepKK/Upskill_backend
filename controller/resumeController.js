@@ -1,8 +1,5 @@
 const express = require('express');
-const Resume = require('./../model/resumeModel.js');
-const {v2:cloudinary} = require('cloudinary')
-const upload = require('./../multerConfig.js');
-const fs = require('fs')
+const Resume = require('../model/resumeModel.js');
 
 const router = express.Router();
 
